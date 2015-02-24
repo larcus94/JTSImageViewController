@@ -9,7 +9,7 @@
 #import "JTSViewController.h"
 
 #import "JTSImageViewController.h"
-#import "JTSImageInfo.h"
+#import "JTSMediaInfo.h"
 
 @interface JTSViewController ()
 
@@ -33,7 +33,7 @@
 - (void)bigButtonTapped:(id)sender {
     
     // Create image info
-    JTSImageInfo *imageInfo = [[JTSImageInfo alloc] init];
+    JTSMediaInfo *imageInfo = [[JTSMediaInfo alloc] init];
     imageInfo.image = self.bigImageButton.image;
     imageInfo.referenceRect = self.bigImageButton.frame;
     imageInfo.referenceView = self.bigImageButton.superview;

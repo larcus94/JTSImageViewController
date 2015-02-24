@@ -68,7 +68,7 @@ UIGestureRecognizerDelegate
 >
 
 // General Info
-@property (strong, nonatomic, readwrite) JTSImageInfo *imageInfo;
+@property (strong, nonatomic, readwrite) JTSMediaInfo *imageInfo;
 @property (strong, nonatomic, readwrite) UIImage *image;
 @property (assign, nonatomic, readwrite) JTSImageViewControllerTransition transition;
 @property (assign, nonatomic, readwrite) JTSImageViewControllerMode mode;
@@ -120,7 +120,7 @@ UIGestureRecognizerDelegate
 
 #pragma mark - Public
 
-- (instancetype)initWithImageInfo:(JTSImageInfo *)imageInfo
+- (instancetype)initWithImageInfo:(JTSMediaInfo *)imageInfo
                              mode:(JTSImageViewControllerMode)mode
                   backgroundStyle:(JTSImageViewControllerBackgroundOptions)backgroundOptions {
     
@@ -378,7 +378,7 @@ UIGestureRecognizerDelegate
 
 #pragma mark - Setup
 
-- (void)setupImageAndDownloadIfNecessary:(JTSImageInfo *)imageInfo {
+- (void)setupImageAndDownloadIfNecessary:(JTSMediaInfo *)imageInfo {
     if (imageInfo.image) {
         self.image = imageInfo.image;
     }

@@ -11,13 +11,13 @@
 		47A333FF19D8F34A00F60031 /* Default-1334.png in Resources */ = {isa = PBXBuildFile; fileRef = 47A333FD19D8F34A00F60031 /* Default-1334.png */; };
 		47A3340019D8F34A00F60031 /* Default-2208.png in Resources */ = {isa = PBXBuildFile; fileRef = 47A333FE19D8F34A00F60031 /* Default-2208.png */; };
 		49CB15921A9642D700C2ECFA /* JTSImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A793518E75541000CAA69 /* JTSImageViewController.m */; };
-		49CB15941A9642D700C2ECFA /* JTSImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A793818E75558000CAA69 /* JTSImageInfo.m */; };
+		49CB15941A9642D700C2ECFA /* JTSMediaInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A793818E75558000CAA69 /* JTSMediaInfo.m */; };
 		49CB15961A9642D700C2ECFA /* JTSSimpleImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A793B18E75593000CAA69 /* JTSSimpleImageDownloader.m */; };
 		49CB15981A9642D700C2ECFA /* JTSAnimatedGIFUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A793E18E755F6000CAA69 /* JTSAnimatedGIFUtility.m */; };
 		49CB159A1A9642D700C2ECFA /* UIImage+JTSImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A794118E75712000CAA69 /* UIImage+JTSImageEffects.m */; };
 		49CB159C1A9642D700C2ECFA /* UIApplication+JTSImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FE95B4D18EE0E8100F18370 /* UIApplication+JTSImageViewController.m */; };
 		49CB159D1A96431E00C2ECFA /* JTSImageViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F9A793418E75541000CAA69 /* JTSImageViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		49CB159E1A96431E00C2ECFA /* JTSImageInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F9A793718E75558000CAA69 /* JTSImageInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		49CB159E1A96431E00C2ECFA /* JTSMediaInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F9A793718E75558000CAA69 /* JTSMediaInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		49CB159F1A96431E00C2ECFA /* JTSSimpleImageDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F9A793A18E75593000CAA69 /* JTSSimpleImageDownloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		49CB15A01A96431E00C2ECFA /* JTSAnimatedGIFUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F9A793D18E755F6000CAA69 /* JTSAnimatedGIFUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		49CB15A11A96431E00C2ECFA /* UIImage+JTSImageEffects.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F9A794018E75712000CAA69 /* UIImage+JTSImageEffects.h */; };
@@ -38,7 +38,7 @@
 		7F9A792818E754A7000CAA69 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7F9A792618E754A7000CAA69 /* InfoPlist.strings */; };
 		7F9A792A18E754A7000CAA69 /* JTSImageVCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A792918E754A7000CAA69 /* JTSImageVCTests.m */; };
 		7F9A793618E75541000CAA69 /* JTSImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A793518E75541000CAA69 /* JTSImageViewController.m */; };
-		7F9A793918E75558000CAA69 /* JTSImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A793818E75558000CAA69 /* JTSImageInfo.m */; };
+		7F9A793918E75558000CAA69 /* JTSMediaInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A793818E75558000CAA69 /* JTSMediaInfo.m */; };
 		7F9A793C18E75593000CAA69 /* JTSSimpleImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A793B18E75593000CAA69 /* JTSSimpleImageDownloader.m */; };
 		7F9A793F18E755F6000CAA69 /* JTSAnimatedGIFUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A793E18E755F6000CAA69 /* JTSAnimatedGIFUtility.m */; };
 		7F9A794218E75712000CAA69 /* UIImage+JTSImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A794118E75712000CAA69 /* UIImage+JTSImageEffects.m */; };
@@ -86,8 +86,8 @@
 		7F9A792918E754A7000CAA69 /* JTSImageVCTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JTSImageVCTests.m; sourceTree = "<group>"; };
 		7F9A793418E75541000CAA69 /* JTSImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JTSImageViewController.h; path = ../../../Source/JTSImageViewController.h; sourceTree = "<group>"; };
 		7F9A793518E75541000CAA69 /* JTSImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JTSImageViewController.m; path = ../../../Source/JTSImageViewController.m; sourceTree = "<group>"; };
-		7F9A793718E75558000CAA69 /* JTSImageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JTSImageInfo.h; path = ../../../Source/JTSImageInfo.h; sourceTree = "<group>"; };
-		7F9A793818E75558000CAA69 /* JTSImageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JTSImageInfo.m; path = ../../../Source/JTSImageInfo.m; sourceTree = "<group>"; };
+		7F9A793718E75558000CAA69 /* JTSMediaInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JTSMediaInfo.h; path = ../../../Source/JTSMediaInfo.h; sourceTree = "<group>"; };
+		7F9A793818E75558000CAA69 /* JTSMediaInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JTSMediaInfo.m; path = ../../../Source/JTSMediaInfo.m; sourceTree = "<group>"; };
 		7F9A793A18E75593000CAA69 /* JTSSimpleImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JTSSimpleImageDownloader.h; path = ../../../Source/JTSSimpleImageDownloader.h; sourceTree = "<group>"; };
 		7F9A793B18E75593000CAA69 /* JTSSimpleImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JTSSimpleImageDownloader.m; path = ../../../Source/JTSSimpleImageDownloader.m; sourceTree = "<group>"; };
 		7F9A793D18E755F6000CAA69 /* JTSAnimatedGIFUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JTSAnimatedGIFUtility.h; path = ../../../Source/JTSAnimatedGIFUtility.h; sourceTree = "<group>"; };
@@ -254,8 +254,8 @@
 			children = (
 				7F9A793418E75541000CAA69 /* JTSImageViewController.h */,
 				7F9A793518E75541000CAA69 /* JTSImageViewController.m */,
-				7F9A793718E75558000CAA69 /* JTSImageInfo.h */,
-				7F9A793818E75558000CAA69 /* JTSImageInfo.m */,
+				7F9A793718E75558000CAA69 /* JTSMediaInfo.h */,
+				7F9A793818E75558000CAA69 /* JTSMediaInfo.m */,
 				7F9A793A18E75593000CAA69 /* JTSSimpleImageDownloader.h */,
 				7F9A793B18E75593000CAA69 /* JTSSimpleImageDownloader.m */,
 				7F9A793D18E755F6000CAA69 /* JTSAnimatedGIFUtility.h */,
@@ -277,7 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49CB159D1A96431E00C2ECFA /* JTSImageViewController.h in Headers */,
-				49CB159E1A96431E00C2ECFA /* JTSImageInfo.h in Headers */,
+				49CB159E1A96431E00C2ECFA /* JTSMediaInfo.h in Headers */,
 				49CB159F1A96431E00C2ECFA /* JTSSimpleImageDownloader.h in Headers */,
 				49CB15A01A96431E00C2ECFA /* JTSAnimatedGIFUtility.h in Headers */,
 				49CB15A11A96431E00C2ECFA /* UIImage+JTSImageEffects.h in Headers */,
@@ -418,7 +418,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49CB15921A9642D700C2ECFA /* JTSImageViewController.m in Sources */,
-				49CB15941A9642D700C2ECFA /* JTSImageInfo.m in Sources */,
+				49CB15941A9642D700C2ECFA /* JTSMediaInfo.m in Sources */,
 				49CB15961A9642D700C2ECFA /* JTSSimpleImageDownloader.m in Sources */,
 				49CB15981A9642D700C2ECFA /* JTSAnimatedGIFUtility.m in Sources */,
 				49CB159A1A9642D700C2ECFA /* UIImage+JTSImageEffects.m in Sources */,
@@ -430,7 +430,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F9A793918E75558000CAA69 /* JTSImageInfo.m in Sources */,
+				7F9A793918E75558000CAA69 /* JTSMediaInfo.m in Sources */,
 				7FE95B4E18EE0E8100F18370 /* UIApplication+JTSImageViewController.m in Sources */,
 				7F9A791518E754A7000CAA69 /* JTSViewController.m in Sources */,
 				7F9A793C18E75593000CAA69 /* JTSSimpleImageDownloader.m in Sources */,
@@ -688,6 +688,7 @@
 				49CB158C1A9642A800C2ECFA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7F9A78F618E754A7000CAA69 /* Build configuration list for PBXProject "JTSImageVC" */ = {
 			isa = XCConfigurationList;

@@ -8,7 +8,7 @@
 
 @import UIKit;
 
-#import "JTSImageInfo.h"
+#import "JTSMediaInfo.h"
 
 ///--------------------------------------------------------------------------------------------------------------------
 /// Definitions
@@ -45,7 +45,7 @@ extern CGFloat const JTSImageViewController_DefaultBackgroundBlurRadius;
 
 @interface JTSImageViewController : UIViewController
 
-@property (strong, nonatomic, readonly) JTSImageInfo *imageInfo;
+@property (strong, nonatomic, readonly) JTSMediaInfo *imageInfo;
 
 @property (strong, nonatomic, readonly) UIImage *image;
 
@@ -73,7 +73,7 @@ extern CGFloat const JTSImageViewController_DefaultBackgroundBlurRadius;
  @param backgroundStyle Currently, either scaled-and-dimmed, or scaled-dimmed-and-blurred. 
  The latter is like Tweetbot 3.0's background style.
  */
-- (instancetype)initWithImageInfo:(JTSImageInfo *)imageInfo
+- (instancetype)initWithImageInfo:(JTSMediaInfo *)imageInfo
                              mode:(JTSImageViewControllerMode)mode
                   backgroundStyle:(JTSImageViewControllerBackgroundOptions)backgroundOptions;
 

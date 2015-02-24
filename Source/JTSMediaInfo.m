@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Nice Boy LLC. All rights reserved.
 //
 
-#import "JTSImageInfo.h"
+#import "JTSMediaInfo.h"
 
-@implementation JTSImageInfo
+@implementation JTSMediaInfo
 
 
 - (NSString *)displayableTitleAltTextSummary {

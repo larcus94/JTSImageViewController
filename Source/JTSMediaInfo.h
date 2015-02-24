@@ -8,10 +8,11 @@
 
 @import UIKit;
 
-@interface JTSImageInfo : NSObject
+@interface JTSMediaInfo : NSObject
 
 @property (strong, nonatomic) UIImage *image; // If nil, be sure to set either imageURL or canonicalImageURL.
 @property (strong, nonatomic) UIImage *placeholderImage; // Use this if all you have is a thumbnail and an imageURL.
+@property (nonatomic, strong) NSURL* videoURL;
 @property (copy, nonatomic) NSURL *imageURL;
 @property (copy, nonatomic) NSURL *canonicalImageURL; // since `imageURL` might be a filesystem URL from the local cache.
 @property (copy, nonatomic) NSString *altText;
