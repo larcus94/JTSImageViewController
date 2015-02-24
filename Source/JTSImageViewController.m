@@ -454,8 +454,8 @@ UIGestureRecognizerDelegate
     [self.mediaView addSubview:self.imageView];
     
     if (self.imageInfo.videoURL) {
-        
         self.moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:self.imageInfo.videoURL];
+        self.moviePlayer.view.frame = self.mediaView.bounds;
         self.moviePlayer.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         [self.moviePlayer prepareToPlay];
     }
@@ -1811,14 +1811,13 @@ UIGestureRecognizerDelegate
 }
 
 - (void)cancelCurrentImageDrag:(BOOL)animated {
-    [self resumeVideoPlayback];
-    
     [self.animator removeAllBehaviors];
     self.attachmentBehavior = nil;
     _flags.isDraggingImage = NO;
     if (animated == NO) {
         self.mediaView.transform = CGAffineTransformIdentity;
         self.mediaView.center = CGPointMake(self.scrollView.contentSize.width/2.0f, self.scrollView.contentSize.height/2.0f);
+        [self resumeVideoPlayback];
     } else {
         [UIView
          animateWithDuration:0.7
@@ -1835,7 +1834,9 @@ UIGestureRecognizerDelegate
                      [self updateScrollViewAndImageViewForCurrentMetrics];
                  }
              }
-         } completion:nil];
+         } completion:^(BOOL finished) {
+             [self resumeVideoPlayback];
+         }];
     }
 }
 
