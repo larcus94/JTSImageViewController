@@ -113,8 +113,6 @@ UIGestureRecognizerDelegate
 @property (strong, nonatomic) NSURLSessionDataTask *imageDownloadDataTask;
 @property (strong, nonatomic) NSTimer *downloadProgressTimer;
 
--(void)showMoviePlayer:(NSNotification*)notification;
-
 @end
 
 ///--------------------------------------------------------------------------------------------------------------------
@@ -458,9 +456,7 @@ UIGestureRecognizerDelegate
     if (self.imageInfo.videoURL) {
         
         self.moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:self.imageInfo.videoURL];
-        self.moviePlayer.view.frame = self.mediaView.bounds;
         self.moviePlayer.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-        [self.mediaView insertSubview:self.moviePlayer.view belowSubview:self.imageView];
         [self.moviePlayer prepareToPlay];
     }
 
@@ -754,10 +750,10 @@ UIGestureRecognizerDelegate
                      
                      if (self.moviePlayer) {
                          if (self.moviePlayer.readyForDisplay) {
-                             [self showMoviePlayer:nil];
+                             [self resumeVideoPlayback];
                          }
                          else {
-                             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMoviePlayer:) name:MPMoviePlayerReadyForDisplayDidChangeNotification object:self.moviePlayer];
+                             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resumeVideoPlayback) name:MPMoviePlayerReadyForDisplayDidChangeNotification object:self.moviePlayer];
                          }
                      }
                      
@@ -872,10 +868,10 @@ UIGestureRecognizerDelegate
                  
                  if (self.moviePlayer) {
                      if (self.moviePlayer.readyForDisplay) {
-                         [self showMoviePlayer:nil];
+                         [self resumeVideoPlayback];
                      }
                      else {
-                         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMoviePlayer:) name:MPMoviePlayerReadyForDisplayDidChangeNotification object:self.moviePlayer];
+                         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resumeVideoPlayback) name:MPMoviePlayerReadyForDisplayDidChangeNotification object:self.moviePlayer];
                      }
                  }
                  
@@ -990,11 +986,6 @@ UIGestureRecognizerDelegate
              }];
         });
     }];
-}
-
--(void)showMoviePlayer:(NSNotification*)notification {
-    self.imageView.hidden = YES;
-    [self.moviePlayer play];
 }
 
 #pragma mark - Options Delegate Convenience
@@ -1605,6 +1596,20 @@ UIGestureRecognizerDelegate
     return frame;
 }
 
+-(void)resumeVideoPlayback {
+    self.moviePlayer.view.frame = self.mediaView.bounds;
+    [self.mediaView insertSubview:self.moviePlayer.view aboveSubview:self.imageView];
+    
+    self.moviePlayer.initialPlaybackTime = NAN;
+    [self.moviePlayer play];
+}
+
+-(void)pauseVideoPlayback {
+    self.moviePlayer.initialPlaybackTime = self.moviePlayer.currentPlaybackTime;
+    [self.moviePlayer pause];
+    [self.moviePlayer.view removeFromSuperview];
+}
+
 #pragma mark - UIScrollViewDelegate
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
@@ -1789,6 +1794,8 @@ UIGestureRecognizerDelegate
 #pragma mark - Dynamic Image Dragging
 
 - (void)startImageDragging:(CGPoint)panGestureLocationInView translationOffset:(UIOffset)translationOffset {
+    [self pauseVideoPlayback];
+    
     self.imageDragStartingPoint = panGestureLocationInView;
     self.imageDragOffsetFromActualTranslation = translationOffset;
     CGPoint anchor = self.imageDragStartingPoint;
@@ -1804,6 +1811,8 @@ UIGestureRecognizerDelegate
 }
 
 - (void)cancelCurrentImageDrag:(BOOL)animated {
+    [self resumeVideoPlayback];
+    
     [self.animator removeAllBehaviors];
     self.attachmentBehavior = nil;
     _flags.isDraggingImage = NO;

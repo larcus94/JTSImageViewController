@@ -94,6 +94,9 @@ extern CGFloat const JTSImageViewController_DefaultBackgroundBlurRadius;
  */
 - (void)dismiss:(BOOL)animated;
 
+-(void)pauseVideoPlayback;
+-(void)resumeVideoPlayback;
+
 @end
 
 ///--------------------------------------------------------------------------------------------------------------------
