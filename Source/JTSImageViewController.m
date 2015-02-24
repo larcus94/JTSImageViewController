@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Nice Boy LLC. All rights reserved.
 //
 
+#import <MediaPlayer/MediaPlayer.h>
 #import "JTSImageViewController.h"
 
 #import "JTSSimpleImageDownloader.h"
@@ -86,6 +87,8 @@ UIGestureRecognizerDelegate
 @property (strong, nonatomic) UIView *snapshotView;
 @property (strong, nonatomic) UIView *blurredSnapshotView;
 @property (strong, nonatomic) UIView *blackBackdrop;
+@property (nonatomic, strong) UIView* mediaView;
+@property (nonatomic, strong) MPMoviePlayerController* moviePlayer;
 @property (strong, nonatomic) UIImageView *imageView;
 @property (strong, nonatomic) UIScrollView *scrollView;
 @property (strong, nonatomic) UITextView *textView;
@@ -437,16 +440,29 @@ UIGestureRecognizerDelegate
     CGRect referenceFrameInWindow = [self.imageInfo.referenceView convertRect:self.imageInfo.referenceRect toView:nil];
     CGRect referenceFrameInMyView = [self.view convertRect:referenceFrameInWindow fromView:nil];
     
-    self.imageView = [[UIImageView alloc] initWithFrame:referenceFrameInMyView];
-    self.imageView.layer.cornerRadius = self.imageInfo.referenceCornerRadius;
+    self.mediaView = [[UIView alloc] initWithFrame:referenceFrameInMyView];
+    self.mediaView.backgroundColor = [UIColor clearColor];
+    self.mediaView.clipsToBounds = YES;
+    self.mediaView.layer.cornerRadius = self.imageInfo.referenceCornerRadius;
+    self.mediaView.isAccessibilityElement = NO;
+    self.mediaView.layer.allowsEdgeAntialiasing = YES;
+    
+    self.imageView = [[UIImageView alloc] initWithFrame:self.mediaView.bounds];
     self.imageView.contentMode = UIViewContentModeScaleAspectFill;
-    self.imageView.userInteractionEnabled = YES;
-    self.imageView.isAccessibilityElement = NO;
     self.imageView.clipsToBounds = YES;
-    self.imageView.layer.allowsEdgeAntialiasing = YES;
+    self.imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    [self.mediaView addSubview:self.imageView];
+    
+    if (self.imageInfo.videoURL) {
+        self.moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:self.imageInfo.videoURL];
+        self.moviePlayer.view.frame = self.mediaView.bounds;
+        self.moviePlayer.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        [self.mediaView insertSubview:self.moviePlayer.view belowSubview:self.imageView];
+    }
+
     if ([self.optionsDelegate respondsToSelector:@selector(imageViewerShouldFadeThumbnailsDuringPresentationAndDismissal:)]) {
         if ([self.optionsDelegate imageViewerShouldFadeThumbnailsDuringPresentationAndDismissal:self]) {
-            self.imageView.alpha = 0;
+            self.mediaView.alpha = 0;
         }
     }
     
@@ -589,7 +605,7 @@ UIGestureRecognizerDelegate
     
     // This will be moved into the scroll view after
     // the transition finishes.
-    [self.view addSubview:self.imageView];
+    [self.view addSubview:self.mediaView];
     
     [viewController presentViewController:self animated:NO completion:^{
         
@@ -599,29 +615,29 @@ UIGestureRecognizerDelegate
         
         CGRect referenceFrameInMyView = [self.view convertRect:referenceFrameInWindow fromView:nil];
         _startingInfo.startingReferenceFrameForThumbnail = referenceFrameInMyView;
-        self.imageView.frame = referenceFrameInMyView;
-        self.imageView.layer.cornerRadius = self.imageInfo.referenceCornerRadius;
+        self.mediaView.frame = referenceFrameInMyView;
+        self.mediaView.layer.cornerRadius = self.imageInfo.referenceCornerRadius;
         [self updateScrollViewAndImageViewForCurrentMetrics];
         
         BOOL mustRotateDuringTransition = ([UIApplication sharedApplication].statusBarOrientation != _startingInfo.startingInterfaceOrientation);
         if (mustRotateDuringTransition) {
             CGRect newStartingRect = [self.snapshotView convertRect:_startingInfo.startingReferenceFrameForThumbnail toView:self.view];
-            self.imageView.frame = newStartingRect;
+            self.mediaView.frame = newStartingRect;
             [self updateScrollViewAndImageViewForCurrentMetrics];
-            self.imageView.transform = self.snapshotView.transform;
+            self.mediaView.transform = self.snapshotView.transform;
             CGPoint centerInRect = CGPointMake(_startingInfo.startingReferenceFrameForThumbnail.origin.x
                                                +_startingInfo.startingReferenceFrameForThumbnail.size.width/2.0f,
                                                _startingInfo.startingReferenceFrameForThumbnail.origin.y
                                                +_startingInfo.startingReferenceFrameForThumbnail.size.height/2.0f);
-            self.imageView.center = centerInRect;
+            self.mediaView.center = centerInRect;
         }
         
         if ([self.optionsDelegate respondsToSelector:@selector(imageViewerShouldFadeThumbnailsDuringPresentationAndDismissal:)]) {
             if ([self.optionsDelegate imageViewerShouldFadeThumbnailsDuringPresentationAndDismissal:self]) {
-                self.imageView.alpha = 0;
+                self.mediaView.alpha = 0;
                 typeof(self) __weak weakSelf = self;
                 [UIView animateWithDuration:0.15f animations:^{
-                    weakSelf.imageView.alpha = 1;
+                    weakSelf.mediaView.alpha = 1;
                 }];
             }
         }
@@ -654,11 +670,11 @@ UIGestureRecognizerDelegate
                 
                 CABasicAnimation *cornerRadiusAnimation = [CABasicAnimation animationWithKeyPath:@"cornerRadius"];
                 cornerRadiusAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-                cornerRadiusAnimation.fromValue = @(weakSelf.imageView.layer.cornerRadius);
+                cornerRadiusAnimation.fromValue = @(weakSelf.mediaView.layer.cornerRadius);
                 cornerRadiusAnimation.toValue = @(0.0);
                 cornerRadiusAnimation.duration = duration;
-                [weakSelf.imageView.layer addAnimation:cornerRadiusAnimation forKey:@"cornerRadius"];
-                weakSelf.imageView.layer.cornerRadius = 0.0;
+                [weakSelf.mediaView.layer addAnimation:cornerRadiusAnimation forKey:@"cornerRadius"];
+                weakSelf.mediaView.layer.cornerRadius = 0.0;
                 
                 [UIView
                  animateWithDuration:duration
@@ -696,7 +712,7 @@ UIGestureRecognizerDelegate
                      weakSelf.blackBackdrop.alpha = self.alphaForBackgroundDimmingOverlay;
                      
                      if (mustRotateDuringTransition) {
-                         weakSelf.imageView.transform = CGAffineTransformIdentity;
+                         weakSelf.mediaView.transform = CGAffineTransformIdentity;
                      }
                      
                      CGRect endFrameForImageView;
@@ -705,21 +721,20 @@ UIGestureRecognizerDelegate
                      } else {
                          endFrameForImageView = [weakSelf resizedFrameForAutorotatingImageView:weakSelf.imageInfo.referenceRect.size];
                      }
-                     weakSelf.imageView.frame = endFrameForImageView;
+                     weakSelf.mediaView.frame = endFrameForImageView;
                      
                      CGPoint endCenterForImageView = CGPointMake(weakSelf.view.bounds.size.width/2.0f, weakSelf.view.bounds.size.height/2.0f);
-                     weakSelf.imageView.center = endCenterForImageView;
+                     weakSelf.mediaView.center = endCenterForImageView;
                      
                      if (weakSelf.image == nil) {
                          weakSelf.progressContainer.alpha = 1.0f;
                      }
                      
                  } completion:^(BOOL finished) {
-                     
                      _flags.isManuallyResizingTheScrollViewFrame = YES;
                      weakSelf.scrollView.frame = weakSelf.view.bounds;
                      _flags.isManuallyResizingTheScrollViewFrame = NO;
-                     [weakSelf.scrollView addSubview:weakSelf.imageView];
+                     [weakSelf.scrollView addSubview:weakSelf.mediaView];
                      
                      _flags.isTransitioningFromInitialModalToInteractiveState = NO;
                      _flags.isAnimatingAPresentationOrDismissal = NO;
@@ -731,6 +746,12 @@ UIGestureRecognizerDelegate
                          [weakSelf dismiss:YES];
                      } else {
                          weakSelf.view.userInteractionEnabled = YES;
+                     }
+                     
+                     if (self.moviePlayer) {
+                         self.imageView.hidden = YES;
+                         [self.moviePlayer play];
+                         self.moviePlayer.shouldAutoplay = YES;
                      }
                      
                      if (completion) {
@@ -761,7 +782,7 @@ UIGestureRecognizerDelegate
     CGRect referenceFrameInWindow = [self.imageInfo.referenceView convertRect:self.imageInfo.referenceRect toView:nil];
     _startingInfo.startingReferenceFrameForThumbnailInPresentingViewControllersOriginalOrientation = [self.view convertRect:referenceFrameInWindow fromView:nil];
     
-    [self.scrollView addSubview:self.imageView];
+    [self.scrollView addSubview:self.mediaView];
     
     [viewController presentViewController:self animated:NO completion:^{
         
@@ -1007,18 +1028,18 @@ UIGestureRecognizerDelegate
     if ([self.optionsDelegate respondsToSelector:@selector(imageViewerShouldFadeThumbnailsDuringPresentationAndDismissal:)]) {
         if ([self.optionsDelegate imageViewerShouldFadeThumbnailsDuringPresentationAndDismissal:self]) {
             [UIView animateWithDuration:0.15 delay:0.18 options:0 animations:^{
-                self.imageView.alpha = 0;
+                self.mediaView.alpha = 0;
             } completion:nil];
         }
     }
     
-    CGRect imageFrame = [self.view convertRect:self.imageView.frame fromView:self.scrollView];
-    self.imageView.autoresizingMask = UIViewAutoresizingNone;
-    self.imageView.transform = CGAffineTransformIdentity;
-    self.imageView.layer.transform = CATransform3DIdentity;
-    [self.imageView removeFromSuperview];
-    self.imageView.frame = imageFrame;
-    [self.view addSubview:self.imageView];
+    CGRect imageFrame = [self.view convertRect:self.mediaView.frame fromView:self.scrollView];
+    self.mediaView.autoresizingMask = UIViewAutoresizingNone;
+    self.mediaView.transform = CGAffineTransformIdentity;
+    self.mediaView.layer.transform = CATransform3DIdentity;
+    [self.mediaView removeFromSuperview];
+    self.mediaView.frame = imageFrame;
+    [self.view addSubview:self.mediaView];
     [self.scrollView removeFromSuperview];
     self.scrollView = nil;
     
@@ -1045,8 +1066,8 @@ UIGestureRecognizerDelegate
             cornerRadiusAnimation.fromValue = @(0.0);
             cornerRadiusAnimation.toValue = @(weakSelf.imageInfo.referenceCornerRadius);
             cornerRadiusAnimation.duration = duration;
-            [weakSelf.imageView.layer addAnimation:cornerRadiusAnimation forKey:@"cornerRadius"];
-            weakSelf.imageView.layer.cornerRadius = weakSelf.imageInfo.referenceCornerRadius;
+            [weakSelf.mediaView.layer addAnimation:cornerRadiusAnimation forKey:@"cornerRadius"];
+            weakSelf.mediaView.layer.cornerRadius = weakSelf.imageInfo.referenceCornerRadius;
             
             [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut animations:^{
                 
@@ -1078,14 +1099,14 @@ UIGestureRecognizerDelegate
                         centerInRect = CGPointMake(rectForCentering.origin.x+rectForCentering.size.width/2.0f,
                                                    rectForCentering.origin.y+rectForCentering.size.height/2.0f);
                     }
-                    weakSelf.imageView.frame = newEndingRect;
-                    weakSelf.imageView.transform = weakSelf.currentSnapshotRotationTransform;
-                    weakSelf.imageView.center = centerInRect;
+                    weakSelf.mediaView.frame = newEndingRect;
+                    weakSelf.mediaView.transform = weakSelf.currentSnapshotRotationTransform;
+                    weakSelf.mediaView.center = centerInRect;
                 } else {
                     if (_startingInfo.presentingViewControllerPresentedFromItsUnsupportedOrientation) {
-                        weakSelf.imageView.frame = _startingInfo.startingReferenceFrameForThumbnailInPresentingViewControllersOriginalOrientation;
+                        weakSelf.mediaView.frame = _startingInfo.startingReferenceFrameForThumbnailInPresentingViewControllersOriginalOrientation;
                     } else {
-                        weakSelf.imageView.frame = _startingInfo.startingReferenceFrameForThumbnail;
+                        weakSelf.mediaView.frame = _startingInfo.startingReferenceFrameForThumbnail;
                     }
                     
                     // Rotation not needed, so fade the status bar back in. Looks nicer.
@@ -1336,7 +1357,7 @@ UIGestureRecognizerDelegate
         self.imageView.image = image;
         self.progressContainer.alpha = 0;
         
-        self.imageView.backgroundColor = [self backgroundColorForImageView];
+        self.mediaView.backgroundColor = [self backgroundColorForImageView];
         
         // Don't update the layouts during a drag.
         if (_flags.isDraggingImage == NO) {
@@ -1468,11 +1489,11 @@ UIGestureRecognizerDelegate
     
     if (suppressAdjustments == NO) {
         if (self.image) {
-            self.imageView.frame = [self resizedFrameForAutorotatingImageView:self.image.size];
+            self.mediaView.frame = [self resizedFrameForAutorotatingImageView:self.image.size];
         } else {
-            self.imageView.frame = [self resizedFrameForAutorotatingImageView:self.imageInfo.referenceRect.size];
+            self.mediaView.frame = [self resizedFrameForAutorotatingImageView:self.imageInfo.referenceRect.size];
         }
-        self.scrollView.contentSize = self.imageView.frame.size;
+        self.scrollView.contentSize = self.mediaView.frame.size;
         self.scrollView.contentInset = [self contentInsetForScrollView:self.scrollView.zoomScale];
     }
 }
@@ -1566,7 +1587,7 @@ UIGestureRecognizerDelegate
 #pragma mark - UIScrollViewDelegate
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
-    return self.imageView;
+    return self.mediaView;
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
@@ -1686,10 +1707,10 @@ UIGestureRecognizerDelegate
         }
         
         if (allowCopy) {
-            CGPoint location = [sender locationInView:self.imageView];
+            CGPoint location = [sender locationInView:self.mediaView];
             UIMenuController *menuController = [UIMenuController sharedMenuController];
             
-            [menuController setTargetRect:CGRectMake(location.x, location.y, 0.0f, 0.0f) inView:self.imageView];
+            [menuController setTargetRect:CGRectMake(location.x, location.y, 0.0f, 0.0f) inView:self.mediaView];
             [menuController setMenuVisible:YES animated:YES];
         }
     }
@@ -1707,7 +1728,7 @@ UIGestureRecognizerDelegate
     CGFloat vectorDistance = sqrtf(powf(velocity.x, 2)+powf(velocity.y, 2));
     
     if (panner.state == UIGestureRecognizerStateBegan) {
-        _flags.isDraggingImage = CGRectContainsPoint(self.imageView.frame, locationInView);
+        _flags.isDraggingImage = CGRectContainsPoint(self.mediaView.frame, locationInView);
         if (_flags.isDraggingImage) {
             [self startImageDragging:locationInView translationOffset:UIOffsetZero];
         }
@@ -1719,7 +1740,7 @@ UIGestureRecognizerDelegate
             newAnchor.y += translation.y + self.imageDragOffsetFromActualTranslation.vertical;
             self.attachmentBehavior.anchorPoint = newAnchor;
         } else {
-            _flags.isDraggingImage = CGRectContainsPoint(self.imageView.frame, locationInView);
+            _flags.isDraggingImage = CGRectContainsPoint(self.mediaView.frame, locationInView);
             if (_flags.isDraggingImage) {
                 UIOffset translationOffset = UIOffsetMake(-1*translation.x, -1*translation.y);
                 [self startImageDragging:locationInView translationOffset:translationOffset];
@@ -1750,14 +1771,14 @@ UIGestureRecognizerDelegate
     self.imageDragStartingPoint = panGestureLocationInView;
     self.imageDragOffsetFromActualTranslation = translationOffset;
     CGPoint anchor = self.imageDragStartingPoint;
-    CGPoint imageCenter = self.imageView.center;
+    CGPoint imageCenter = self.mediaView.center;
     UIOffset offset = UIOffsetMake(panGestureLocationInView.x-imageCenter.x, panGestureLocationInView.y-imageCenter.y);
     self.imageDragOffsetFromImageCenter = offset;
-    self.attachmentBehavior = [[UIAttachmentBehavior alloc] initWithItem:self.imageView offsetFromCenter:offset attachedToAnchor:anchor];
+    self.attachmentBehavior = [[UIAttachmentBehavior alloc] initWithItem:self.mediaView offsetFromCenter:offset attachedToAnchor:anchor];
     [self.animator addBehavior:self.attachmentBehavior];
-    UIDynamicItemBehavior *modifier = [[UIDynamicItemBehavior alloc] initWithItems:@[self.imageView]];
-    modifier.angularResistance = [self appropriateAngularResistanceForView:self.imageView];
-    modifier.density = [self appropriateDensityForView:self.imageView];
+    UIDynamicItemBehavior *modifier = [[UIDynamicItemBehavior alloc] initWithItems:@[self.mediaView]];
+    modifier.angularResistance = [self appropriateAngularResistanceForView:self.mediaView];
+    modifier.density = [self appropriateDensityForView:self.mediaView];
     [self.animator addBehavior:modifier];
 }
 
@@ -1766,8 +1787,8 @@ UIGestureRecognizerDelegate
     self.attachmentBehavior = nil;
     _flags.isDraggingImage = NO;
     if (animated == NO) {
-        self.imageView.transform = CGAffineTransformIdentity;
-        self.imageView.center = CGPointMake(self.scrollView.contentSize.width/2.0f, self.scrollView.contentSize.height/2.0f);
+        self.mediaView.transform = CGAffineTransformIdentity;
+        self.mediaView.center = CGPointMake(self.scrollView.contentSize.width/2.0f, self.scrollView.contentSize.height/2.0f);
     } else {
         [UIView
          animateWithDuration:0.7
@@ -1778,9 +1799,9 @@ UIGestureRecognizerDelegate
          UIViewAnimationOptionBeginFromCurrentState
          animations:^{
              if (_flags.isDraggingImage == NO) {
-                 self.imageView.transform = CGAffineTransformIdentity;
+                 self.mediaView.transform = CGAffineTransformIdentity;
                  if (self.scrollView.dragging == NO && self.scrollView.decelerating == NO) {
-                     self.imageView.center = CGPointMake(self.scrollView.contentSize.width/2.0f, self.scrollView.contentSize.height/2.0f);
+                     self.mediaView.center = CGPointMake(self.scrollView.contentSize.width/2.0f, self.scrollView.contentSize.height/2.0f);
                      [self updateScrollViewAndImageViewForCurrentMetrics];
                  }
              }
@@ -1791,14 +1812,14 @@ UIGestureRecognizerDelegate
 - (void)dismissImageWithFlick:(CGPoint)velocity {
     _flags.imageIsFlickingAwayForDismissal = YES;
     __weak JTSImageViewController *weakSelf = self;
-    UIPushBehavior *push = [[UIPushBehavior alloc] initWithItems:@[self.imageView] mode:UIPushBehaviorModeInstantaneous];
+    UIPushBehavior *push = [[UIPushBehavior alloc] initWithItems:@[self.mediaView] mode:UIPushBehaviorModeInstantaneous];
     push.pushDirection = CGVectorMake(velocity.x*0.1, velocity.y*0.1);
-    [push setTargetOffsetFromCenter:self.imageDragOffsetFromImageCenter forItem:self.imageView];
+    [push setTargetOffsetFromCenter:self.imageDragOffsetFromImageCenter forItem:self.mediaView];
     push.action = ^{
         if ([weakSelf imageViewIsOffscreen]) {
             [weakSelf.animator removeAllBehaviors];
             weakSelf.attachmentBehavior = nil;
-            [weakSelf.imageView removeFromSuperview];
+            [weakSelf.mediaView removeFromSuperview];
             [weakSelf dismiss:YES];
         }
     };
