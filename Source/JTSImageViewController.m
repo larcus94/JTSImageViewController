@@ -113,6 +113,8 @@ UIGestureRecognizerDelegate
 @property (strong, nonatomic) NSURLSessionDataTask *imageDownloadDataTask;
 @property (strong, nonatomic) NSTimer *downloadProgressTimer;
 
+-(void)showMoviePlayer:(NSNotification*)notification;
+
 @end
 
 ///--------------------------------------------------------------------------------------------------------------------
@@ -199,6 +201,7 @@ UIGestureRecognizerDelegate
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerReadyForDisplayDidChangeNotification object:nil];
     [_imageDownloadDataTask cancel];
     [self cancelProgressTimer];
 }
@@ -418,7 +421,6 @@ UIGestureRecognizerDelegate
 }
 
 - (void)viewDidLoadForImageMode {
-    
     self.view.backgroundColor = [UIColor blackColor];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
@@ -454,10 +456,12 @@ UIGestureRecognizerDelegate
     [self.mediaView addSubview:self.imageView];
     
     if (self.imageInfo.videoURL) {
+        
         self.moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:self.imageInfo.videoURL];
         self.moviePlayer.view.frame = self.mediaView.bounds;
         self.moviePlayer.view.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         [self.mediaView insertSubview:self.moviePlayer.view belowSubview:self.imageView];
+        [self.moviePlayer prepareToPlay];
     }
 
     if ([self.optionsDelegate respondsToSelector:@selector(imageViewerShouldFadeThumbnailsDuringPresentationAndDismissal:)]) {
@@ -749,9 +753,12 @@ UIGestureRecognizerDelegate
                      }
                      
                      if (self.moviePlayer) {
-                         self.imageView.hidden = YES;
-                         [self.moviePlayer play];
-                         self.moviePlayer.shouldAutoplay = YES;
+                         if (self.moviePlayer.readyForDisplay) {
+                             [self showMoviePlayer:nil];
+                         }
+                         else {
+                             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMoviePlayer:) name:MPMoviePlayerReadyForDisplayDidChangeNotification object:self.moviePlayer];
+                         }
                      }
                      
                      if (completion) {
@@ -861,6 +868,15 @@ UIGestureRecognizerDelegate
                  _flags.isPresented = YES;
                  if (_flags.imageDownloadFailed) {
                      [weakSelf dismiss:YES];
+                 }
+                 
+                 if (self.moviePlayer) {
+                     if (self.moviePlayer.readyForDisplay) {
+                         [self showMoviePlayer:nil];
+                     }
+                     else {
+                         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMoviePlayer:) name:MPMoviePlayerReadyForDisplayDidChangeNotification object:self.moviePlayer];
+                     }
                  }
                  
                  if (completion) {
@@ -974,6 +990,11 @@ UIGestureRecognizerDelegate
              }];
         });
     }];
+}
+
+-(void)showMoviePlayer:(NSNotification*)notification {
+    self.imageView.hidden = YES;
+    [self.moviePlayer play];
 }
 
 #pragma mark - Options Delegate Convenience

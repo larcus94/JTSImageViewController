@@ -24,6 +24,8 @@
 		49CB15A21A96431E00C2ECFA /* UIApplication+JTSImageViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FE95B4C18EE0E8100F18370 /* UIApplication+JTSImageViewController.h */; };
 		49CB15A41A9643D600C2ECFA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9A790218E754A7000CAA69 /* UIKit.framework */; };
 		49D4E2E01A9C6B1300FCB089 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49D4E2DF1A9C6B1300FCB089 /* MediaPlayer.framework */; };
+		49D4E2E71A9C824D00FCB089 /* Crimson-Typing.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 49D4E2E51A9C824D00FCB089 /* Crimson-Typing.mp4 */; };
+		49D4E2E81A9C824D00FCB089 /* Crimson-Typing-Thumbnail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49D4E2E61A9C824D00FCB089 /* Crimson-Typing-Thumbnail@2x.png */; };
 		7F9A78FF18E754A7000CAA69 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9A78FE18E754A7000CAA69 /* Foundation.framework */; };
 		7F9A790118E754A7000CAA69 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9A790018E754A7000CAA69 /* CoreGraphics.framework */; };
 		7F9A790318E754A7000CAA69 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9A790218E754A7000CAA69 /* UIKit.framework */; };
@@ -67,6 +69,8 @@
 		49CB15881A9642A800C2ECFA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		49CB15891A9642A800C2ECFA /* JTSImageViewControllerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JTSImageViewControllerTests.m; sourceTree = "<group>"; };
 		49D4E2DF1A9C6B1300FCB089 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		49D4E2E51A9C824D00FCB089 /* Crimson-Typing.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Crimson-Typing.mp4"; path = "../../../../../../Desktop/Crimson-Typing.mp4"; sourceTree = "<group>"; };
+		49D4E2E61A9C824D00FCB089 /* Crimson-Typing-Thumbnail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Crimson-Typing-Thumbnail@2x.png"; path = "../../../../../../Desktop/Crimson-Typing-Thumbnail@2x.png"; sourceTree = "<group>"; };
 		7F9A78FB18E754A7000CAA69 /* JTSImageVC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JTSImageVC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F9A78FE18E754A7000CAA69 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7F9A790018E754A7000CAA69 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -206,6 +210,8 @@
 		7F9A790418E754A7000CAA69 /* Sample App */ = {
 			isa = PBXGroup;
 			children = (
+				49D4E2E51A9C824D00FCB089 /* Crimson-Typing.mp4 */,
+				49D4E2E61A9C824D00FCB089 /* Crimson-Typing-Thumbnail@2x.png */,
 				7FE0848118E7C5C600F2F6B4 /* banecat.jpg */,
 				7FA8566619B2762F00913254 /* banecat-red.png */,
 				47A333FD19D8F34A00F60031 /* Default-1334.png */,
@@ -400,8 +406,10 @@
 				7FA8566719B2762F00913254 /* banecat-red.png in Resources */,
 				47A3340019D8F34A00F60031 /* Default-2208.png in Resources */,
 				47A333FF19D8F34A00F60031 /* Default-1334.png in Resources */,
+				49D4E2E71A9C824D00FCB089 /* Crimson-Typing.mp4 in Resources */,
 				7F9A791718E754A7000CAA69 /* Images.xcassets in Resources */,
 				7F9A790918E754A7000CAA69 /* InfoPlist.strings in Resources */,
+				49D4E2E81A9C824D00FCB089 /* Crimson-Typing-Thumbnail@2x.png in Resources */,
 				7F9A791218E754A7000CAA69 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
