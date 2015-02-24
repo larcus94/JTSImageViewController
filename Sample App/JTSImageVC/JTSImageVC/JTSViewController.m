@@ -20,7 +20,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.bigImageButton.image = [UIImage imageNamed:@"Crimson-Typing-Thumbnail"];
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] init];
     [tapRecognizer addTarget:self action:@selector(bigButtonTapped:)];
     [self.bigImageButton addGestureRecognizer:tapRecognizer];
@@ -41,7 +40,6 @@
     imageInfo.referenceView = self.bigImageButton.superview;
     imageInfo.referenceContentMode = self.bigImageButton.contentMode;
     imageInfo.referenceCornerRadius = self.bigImageButton.layer.cornerRadius;
-    imageInfo.videoURL = [[NSBundle mainBundle] URLForResource:@"Crimson-Typing" withExtension:@"mp4"];
     
     // Setup view controller
     JTSImageViewController *imageViewer = [[JTSImageViewController alloc]
