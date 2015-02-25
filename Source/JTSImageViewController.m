@@ -1591,8 +1591,19 @@ UIGestureRecognizerDelegate
             targetWidth = screenHeight / (nativeHeight / nativeWidth);
         }
     }
-    frame.size = CGSizeMake(targetWidth, targetHeight);
-    frame.origin = CGPointMake(0, 0);
+    
+    CGPoint origin = CGPointZero;
+    CGSize size = CGSizeMake(targetWidth, targetHeight);
+    
+    if (targetWidth > imageSize.width || targetHeight > imageSize.height) {
+        CGPoint center = CGPointMake(size.width/2.0f, size.height/2.0f);
+        size = imageSize;
+        
+        origin = CGPointMake(center.x-size.width/2.0f, center.y-size.height/2.0f);
+    }
+    
+    frame.size = size;
+    frame.origin = origin;
     return frame;
 }
 
